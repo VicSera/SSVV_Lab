@@ -21,15 +21,65 @@ public class ServiceTest {
 
     @Test
     public void saveStudent_validData_studentSaved() {
-        service.saveStudent("1", "Test Student", 936);
+        service.saveStudent("5", "paul", 936);
 
         Assert.assertEquals(1, Stream.of(service.findAllStudents().spliterator()).count());
     }
 
     @Test
-    public void saveStudent_invalidData_validationException() {
+    public void saveStudent_nullId_validationException() {
         try {
-            service.saveStudent("1", "Test Student", 9360);
+            service.saveStudent(null, "paul", 936);
+            Assert.fail("Validation Exception not thrown");
+        } catch (ValidationException ignored) {
+
+        }
+    }
+
+    @Test
+    public void saveStudent_emptyId_validationException() {
+        try {
+            service.saveStudent("", "paul", 936);
+            Assert.fail("Validation Exception not thrown");
+        } catch (ValidationException ignored) {
+
+        }
+    }
+
+    @Test
+    public void saveStudent_nullName_validationException() {
+        try {
+            service.saveStudent("5", null, 936);
+            Assert.fail("Validation Exception not thrown");
+        } catch (ValidationException ignored) {
+
+        }
+    }
+
+    @Test
+    public void saveStudent_emptyName_validationException() {
+        try {
+            service.saveStudent("5", "", 936);
+            Assert.fail("Validation Exception not thrown");
+        } catch (ValidationException ignored) {
+
+        }
+    }
+
+    @Test
+    public void saveStudent_groupTooLow_validationException() {
+        try {
+            service.saveStudent("5", "paul", 1);
+            Assert.fail("Validation Exception not thrown");
+        } catch (ValidationException ignored) {
+
+        }
+    }
+
+    @Test
+    public void saveStudent_groupTooHigh_validationException() {
+        try {
+            service.saveStudent("5", "paul", 1000);
             Assert.fail("Validation Exception not thrown");
         } catch (ValidationException ignored) {
 
