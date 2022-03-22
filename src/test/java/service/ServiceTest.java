@@ -1,6 +1,7 @@
 package service;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import repository.NotaXMLRepository;
 import repository.StudentXMLRepository;
@@ -10,14 +11,11 @@ import validation.StudentValidator;
 import validation.TemaValidator;
 import validation.ValidationException;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 public class ServiceTest {
-    private Service service = new Service(
-            new StudentXMLRepository(new StudentValidator(), "studenti_test.xml"),
-            new TemaXMLRepository(new TemaValidator(), "teme_test.xml"),
-            new NotaXMLRepository(new NotaValidator(), "note_test.xml")
-    );
+    private Service service;
 
     @Test
     public void saveStudent_validData_studentSaved() {
@@ -92,5 +90,33 @@ public class ServiceTest {
         service.saveStudent("5", "paul", 111);
 
         Assert.assertEquals(1, Stream.of(service.findAllStudents().spliterator()).count());
+    }
+
+    @Test
+    public void saveTema_validData_returns1() {
+        int result = service.saveTema("1", "Descriere", 7, 5);
+
+        Assert.assertEquals(1, result);
+    }
+
+    @Test
+    public void saveTema_duplicateId_returns0() {
+        service.saveTema("1", "Descriere", 7, 5);
+        int result = service.saveTema("1", "Descriere", 7, 5);
+
+        Assert.assertEquals(0, result);
+    }
+
+    @Before
+    public void cleanup() {
+        new File("note_test.xml").delete();
+        new File("studenti_test.xml").delete();
+        new File("teme_test.xml").delete();
+
+        service = new Service(
+            new StudentXMLRepository(new StudentValidator(), "studenti_test.xml"),
+            new TemaXMLRepository(new TemaValidator(), "teme_test.xml"),
+            new NotaXMLRepository(new NotaValidator(), "note_test.xml")
+        );
     }
 }
