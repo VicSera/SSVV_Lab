@@ -107,6 +107,21 @@ public class ServiceTest {
         Assert.assertEquals(0, result);
     }
 
+    @Test
+    public void saveTema_path1_returns1() {
+        int result = service.saveTema("1", "descriere 1", 5, 3);
+
+        Assert.assertEquals(1, result);
+    }
+
+    @Test
+    public void saveTema_path2_returns0() {
+        service.saveTema("2", "descriere 2", 6, 4);
+        int result = service.saveTema("2", "descriere 2", 6, 4);
+
+        Assert.assertEquals(0, result);
+    }
+
     @Before
     public void cleanup() {
         new File("note_test.xml").delete();
